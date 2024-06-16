@@ -66,12 +66,21 @@ public class DepartmentFormController implements Initializable {
 		try {
 			entity = getFormData();
 			service.saveOrUpdate(entity);
+			notifyDataChangeListeners();
 			Utils.currentStage(event).close();
 		} catch (DbException e) {
 			Alerts.showAlert("Error saving object", null, e.getMessage(), AlertType.ERROR);
 		}
 	}
 	
+	private void notifyDataChangeListeners() {
+		
+		for (DataChangeListener listener : dataChangeListeners) {
+			listener.onDataChange();
+		}
+		
+	}
+
 	private Department getFormData() {
 		Department obj = new Department();
 
